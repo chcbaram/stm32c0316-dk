@@ -3,3 +3,5 @@ stm32c0_led/Debug/
 stm32c0_led/stm32c0_led Debug.launch
 stm32c0_pwm/Debug/
 stm32c0_pwm/.settings/language.settings.xml
+stm32c0_adc/Debug/
+stm32c0_adc/.settings/language.settings.xml
