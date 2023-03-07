@@ -11,3 +11,5 @@ stm32c0_button/.settings/language.settings.xml
 stm32c0_uart/Debug/
 stm32c0_uart_dma/Debug/
 stm32c0_uart_dma/.settings/language.settings.xml
+stm32c0_cli/.settings/language.settings.xml
+stm32c0_cli/Debug/
