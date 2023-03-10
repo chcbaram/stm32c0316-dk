@@ -107,5 +107,21 @@ uint32_t uartPrintf(uint8_t ch, const char *fmt, ...)
   return ret;
 }
 
+uint32_t uartVPrintf(uint8_t ch, const char *fmt, va_list arg)
+{
+  uint32_t ret = 0;
+  char print_buf[256];
+
+
+  int len;
+  len = vsnprintf(print_buf, 256, fmt, arg);
+
+  if (len > 0)
+  {
+    ret = uartWrite(ch, (uint8_t *)print_buf, len);
+  }
+
+  return ret;
+}
 
 

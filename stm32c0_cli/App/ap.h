@@ -15,6 +15,7 @@
 #include "adc.h"
 #include "button.h"
 #include "uart.h"
+#include "cli.h"
 
 
 void apInit(void);

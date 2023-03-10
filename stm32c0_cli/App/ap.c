@@ -7,32 +7,22 @@
 
 
 #include "ap.h"
-#include "string.h"
-#include "stdlib.h"
 
 
 
-float adc_vol = 0;
-float adc_vol_vref = 0;
-
-bool button_data[BUTTON_MAX_CH];
-
-
-char     cli_buf[128];
-uint16_t cli_buf_index = 0;
-
-uint16_t cli_argc = 0;
-char    *cli_argv[8];
-
+static void infoCli(uint8_t argc, const char **argv);
 
 
 void apInit(void)
 {
+  cliInit();
   ledInit();
   pwmInit();
   adcInit();
   buttonInit();
   uartInit();
+
+  cliAdd("info", infoCli);
 }
 
 void apMain(void)
@@ -52,59 +42,52 @@ void apMain(void)
       ledToggle(_DEF_CH1);
     }
 
+    cliMain();
+  }
+}
 
-    adc_vol      = (float)adcReadVoltage(_DEF_CH1) / 100.f;
-    adc_vol_vref = (float)adcReadVoltage(_DEF_CH3) / 100.f;
-
-
-    button_data[_BUTTON_CH_SEL  ] = buttonGetPressed(_BUTTON_CH_SEL);
-    button_data[_BUTTON_CH_UP   ] = buttonGetPressed(_BUTTON_CH_UP);
-    button_data[_BUTTON_CH_DOWN ] = buttonGetPressed(_BUTTON_CH_DOWN);
-    button_data[_BUTTON_CH_LEFT ] = buttonGetPressed(_BUTTON_CH_LEFT);
-    button_data[_BUTTON_CH_RIGHT] = buttonGetPressed(_BUTTON_CH_RIGHT);
+void infoCli(uint8_t argc, const char **argv)
+{
+  bool ret = false;
 
 
-    if (uartAvailable(_DEF_CH1) > 0)
+  if (argc == 1 && cliIsStr(argv[0], "test"))
+  {
+    cliPrintf("infoCli run test\n");
+    ret = true;
+  }
+
+  if (argc == 2 && cliIsStr(argv[0], "print"))
+  {
+    uint8_t count;
+
+    count = (uint8_t)cliGetData(argv[1]);
+    for (int i=0; i<count; i++)
     {
-      uint8_t rx_data;
-
-      rx_data = uartRead(_DEF_CH1);
-
-      if (rx_data == '\r')
-      {
-        cli_buf[cli_buf_index] = 0;
-        cli_buf_index = 0;
-
-        uartPrintf(_DEF_CH1, "\r\n");
-
-        // RUN CMD
-        char *tok;
-        char *str_ptr = cli_buf;
-
-        cli_argc = 0;
-        while((tok = strtok_r(str_ptr, " ", &str_ptr)) != NULL)
-        {
-          cli_argv[cli_argc] = tok;
-          cli_argc++;
-        }
-
-        if (cli_argc == 2 && strcmp(cli_argv[0], "test") == 0)
-        {
-          int32_t test_data;
-
-          test_data = (int32_t)strtoul(cli_argv[1], (char **)NULL, 0);
-          uartPrintf(_DEF_CH1, "test data : %d\n", test_data);
-        }
-
-        uartPrintf(_DEF_CH1, "cli# ");
-      }
-      else if (cli_buf_index < (128 - 1))
-      {
-        cli_buf[cli_buf_index] = rx_data;
-        cli_buf_index++;
-
-        uartWrite(_DEF_CH1, &rx_data, 1);
-      }
+      cliPrintf("print %d/%d\n", i+1, count);
     }
+
+    ret = true;
+  }
+
+  if (argc == 1 && cliIsStr(argv[0], "button"))
+  {
+    while(cliKeepLoop())
+    {
+      for (int i=0; i<BUTTON_MAX_CH; i++)
+      {
+        cliPrintf("%d", buttonGetPressed(i));
+      }
+      cliPrintf("\n");
+      delay(100);
+    }
+    ret = true;
+  }
+
+  if (ret == false)
+  {
+    cliPrintf("info test\n");
+    cliPrintf("info print 0~10\n");
+    cliPrintf("info button\n");
   }
 }
