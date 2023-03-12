@@ -14,3 +14,4 @@ stm32c0_uart_dma/.settings/language.settings.xml
 stm32c0_cli/.settings/language.settings.xml
 stm32c0_cli/Debug/
 stm32c0_swtimer/Debug/
+stm32c0_rtc/Debug/
