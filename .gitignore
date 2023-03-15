@@ -16,3 +16,5 @@ stm32c0_cli/Debug/
 stm32c0_swtimer/Debug/
 stm32c0_rtc/Debug/
 stm32c0_wdg/Debug/
+stm32c0_boot/Debug/
+stm32c0_fsbl/Debug/
