@@ -25,7 +25,7 @@ void ledISR(void *arg)
 void apInit(void)
 {
   wdgInit();
-  //wdgBegin(2000);
+  wdgBegin(2000);
   cliInit();
   swtimerInit();
   rtcInit();
@@ -72,7 +72,7 @@ void apMain(void)
 
     cliMain();
 
-    //wdgRefresh();
+    wdgRefresh();
   }
 }
 
@@ -121,6 +121,7 @@ void infoCli(uint8_t argc, const char **argv)
     void (**jump_boot)(void) = (void (**)(void))(0x1FFF0000 + 4);
 
 
+    HAL_DeInit();
     HAL_RCC_DeInit();
 
     SysTick->CTRL = 0;
