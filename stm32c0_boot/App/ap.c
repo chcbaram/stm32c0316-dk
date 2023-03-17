@@ -26,11 +26,11 @@ void apInit(void)
   if (buttonGetPressed(_DEF_CH1))
   {
     wdgBegin(2000);
-    jumpToAddr(0x1FFF0000);
+    jumpToAddr(0x1FFF0000); // Jump To System Bootloader
   }
   else
   {
-    jumpToAddr(0x8000000 + 2*1024);
+    jumpToAddr(0x8000800); // Jump To Firmware
   }
 }
 
